@@ -1,0 +1,132 @@
+####Session-03 [02-May-24]
+https://github.com/cprakash2118/OpenShift-April24
+
+####
+Quick Recap 
+
+#
+- Product Details w.r.t RHOCPv4.X
+- Cloud Provider/Self Edition/Add-on services.
+FYI- "Red Hat Openshift service"
+   - Red Hat Openshift service on AWS 
+   - Microsoft Azure Red Hat Openshift.
+   - Openshift Dedicated (w.r.t Google Cloud)
+   - Red Hat Openshift service on IBm Cloud (PAC)
+   
+   Red Hat Openshift Container Platform
+   Red Hat Openshift Plus [ Multi CLuster env and Security ; Openshift AI service].
+ 
+# Classroom/Prodcution setup.
+master01-03 - Well enough to handle 2k+ workers nodes.
+Note: 
+ - Single master node cluster (NO HA)
+ - AllinONe machine [ master/worker both same time]
+ - cluster with dual nature [master/worker]
+    Example:
+	 master01  master/worker 
+	 master02  master/worker
+	 master03  master/worker
+	 
+	 master01.lab.example.com, additional node [DO280]
+	 master01-03,worker01-03,additional node [ DO380]
+	 
+	 FYI- Along with master/worker, we have infra & storage nodes also. [worker node convert to infra/storage]
+	 
+Example:- 	 
+6 node RHOCPv4.X cluster [3 master; 3 workers]
+
+Base Domain:-  example.com 
+Cluster Name:- ocp4 
+
+API URL     = https://api.<cluster_name>.<Base_Domain>:6443
+            = https://api.ocp4.example.com:6443 
+			
+Web COnsole = https://<app_name>-<namespace>.wildcard-Domain
+            = https://console-openshift-console.apps.ocp4.example.com 
+			
+
+## Using above information, login to OCP [openshift/kubernetes]
+
+*****************************
+$ oc login -u admin -p redhat https://api.ocp4.example.com:6443 
+$ oc whoami 
+admin 
+$ oc whoami --show-console 
+https://console-openshift-console.apps.ocp4.example.com 
+
+$ oc get nodes 
+$ oc version [Openshift-client; openshift-server; kubernetes version; kustomization]
+$ oc get clusterversion 
+
+*****************************
+
+###############################################################
+Red Hat Openshift Container Platform:-
+- Login to OCP cluster [ User used to login to CLuster]
+  Note: admin - "cluster-admin" ; admin-apps01 - "admin" - admin know as "Project Admin"
+  
+  Roles:-
+    cluster-admin 
+	admin 
+	
+1- rule       - Action w.r.t specific activites 
+2- role/roles - Setup of actions w.r.t specific activites - name - "Cluster-Admin"
+3- binding    - Adding role to users/groups called role binding.
+                Role binding also - Cluster/Local-"namespace"
+
+
+
+# 1st Task-
+Creating own users, login to OCP cluster.
+user1-5   - devops_grp 
+user6-10  - app01_grp 				
+	
+# 2nd Task-
+Assign roles to users/groups 
+
+####
+Step-1:-
+Create htpasswd-upload file using "htpasswd" utility.
+htpasswd -c -B -b htpasswd-upload user1 redhat123 
+htpasswd    -B -b htpasswd-upload user2 redhat123 
+
+
+-c -> New File 
+-b -> Passing password as command line argument 
+-B -> More strong encryptions
+
+Inject this file "htpasswd-upload" to OCP cluster, we have two options.
+- COnfigMap (cm)
+- Secret (secret)
+
+Step-2:-
+$ oc create secret generic secret-name --from-file htpasswd=file-name -n openshift-config 
+
+NOte: All auth related resources w.r.t openshift-config namespace/project 
+
+$ oc get secret -n openshift-config | grep secret-name
+$ oc get secret secret-name -n openshift-config
+$ oc get secret secret-name -n openshift-config -o yaml 
+$ oc get secret secret-name -n openshift-config -o json 
+
+
+Step-3:-
+$ oc get oauth/cluster -o yaml > oauth.yaml 
+$ vim oauth 
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/authentication_and_authorization/configuring-identity-providers#identity-provider-htpasswd-CR_configuring-htpasswd-identity-provider
+
+$ oc replace -f oauth.yaml 
+$ oc get pods -n openshift-authentication 
+
+$ oc login -u user1 -p redhat https://api.ocp4.example.com:6443 
+
+
+
+
+
+
+
+
+
+
+	
