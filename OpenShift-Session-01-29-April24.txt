@@ -1,0 +1,144 @@
+####Session-01 [29_april-24]
+
+#
+Product:-
+Red Hat OpenShift Container Platform (RHOCPv4.X)
+RHOCPv410-414 [Current version - RHOCPv415]
+
+Reference Links 
+Overall products w.r.t OpenShift.
+https://www.redhat.com/en/technologies/cloud-computing/openshift
+
+
+Red Hat OpenShift Container Platform:-
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.15
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14
+
+
+#
+Red Hat OpenShift:-
+
+1) Cloud services editions
+Red Hat OpenShift service on AWS    [Managed/support by Amazon]
+Microsoft Azure Red Hat OpenShift   [Managed/support by Azure ]
+Red Hat OpenShift Dedicated         [Managed/support by Google]
+Red Hat OpenShift on IBM Cloud      [Managed/support by IBM   ]
+
+2)Self-managed editions
+Red Hat OpenShift Container Platform
+Red Hat openshift Plus 
+
+
+Note: RHOCP on AWS/GCP/Azure/VMware/RHV/KVM/OpenStack as Self-managed editions.
+      RHOCP anywhere [Public/Private Cloud ; Virtulization Layer ; bare metal layer]
+
+Reference Link - https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14/html/installing/index
+
+
+
+3) Services & add-ons
+OpenShift AI (AI/LM)
+Red Hat Advance Cluster Management (RHACM) for Kubernetes
+Red Hat Advance Cluster Security (RHACS) for Kubernetes  
+Red Hat Quay deployment.
+Red Hat 3Slace API 
+
+
+Red Hat OpenShift Kubernetes Engine
+https://www.redhat.com/en/technologies/cloud-computing/openshift/kubernetes-engine
+https://docs.openshift.com/container-platform/4.8/welcome/oke_about.html
+
+
+######################
+Classroom/Product setup as per Enterprise OpenShift.
+
+1) Jump server [ window system or laptop/Linux Server ]
+  Window/Linux/Mac etc 
+  NOte: Install "oc" - OpenShift-Client on jump server.
+  
+  OpenShift-Client (oc) used for to communicate with OpenShift/Kubernetes cluster.
+  
+  What is OpenShift Cluster ?
+   - Setup master/worker nodes 
+   - In general/as per Production - 3 masters can handle 2000+ worker nodes.
+  
+  What is master node?
+  Master nodes [master01-03] running OpenShift/Kubernetes services, which allow to deploy "End User applications" - like "banking application", "sports Industries". on worker noeds.
+  
+  Worker nodes where end user applications deployed.
+  
+
+2) 6 node cluster.
+    base domain  - example.com 
+	Cluster Name - ocp4
+	API URL = https://api.<cluster-name>.<Base-Domain>:6443
+	API URL = https://api.ocp4.example.com:6443
+
+	
+	base domain  - example.com 
+	Cluster Name - ocp4-mng
+	API URL = https://api.ocp4-mng.example.com:6443 
+	
+
+   	
+### As per the Red Hat LABs.
+User Details as per VMs/Servers 
+1. student/student (sudo access)
+2. root/redhat 
+
+User Details as per OCP cluster.
+1. admin/redhat or admin/redhatocp 
+2. developer/developer 
+3. kubeadmin/password  
+FYI- Refer "kubeadmin-password" file to get the kubeadmin password.
+
+[Note: To get kubeadmin password; follow below steps]
+   $ whoami ; hostname 
+   $ ssh root@utility 
+   # /home/lab/ocp4/auth 
+   # ls -l 
+   kubeadmin-password 
+   kubeconfig 
+   
+   
+   
+  $ oc login -u admin -p redhat https://api.ocp4.example.com:6443
+  $ oc whoami 
+  $ oc get nodes 
+  
+  
+  OpenShift/Kubernetes share Rest API to manage it's own resources.
+  POD 
+  SVC 
+  Deployment 
+  DeploymentConfig (DC)
+  BuildCOnfig (BC)
+  Secret 
+  ConfigMap 
+  PersistentVolume (pv)
+  PersistentVolumeClaim(PVC)
+  etc 
+  
+  
+  
+   oc create secret generic mysql --from-literal user=myuser --from-literal password=redhat123 --from-literal database=test_secrets --from-literal hostname=mysql
+  
+  
+  
+  
+  
+  
+   
+   
+   
+   
+  
+
+
+
+
+
+
+
+
+

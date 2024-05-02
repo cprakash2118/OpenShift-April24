@@ -1,0 +1,106 @@
+####Session-02 [30_april-24]
+
+
+https://github.com/cprakash2118/OpenShift-April24
+
+#Quick Recap:-
+
+1) Product - RHOCP
+Red Hat OpenShift Container Platform (RHOCP)
+
+2) Training module - DO180 -> DO280 -> DO380 (Reference points).
+   https://redhat.com
+   https://www.redhat.com/en/technologies/cloud-computing/openshift
+   
+3) Classroom Setup/ Production setup:-
+  master/worker nodes 
+  FYI
+  - infra/storage nodes, these nodes always added as worker node 1st the move to respective.
+       worker node convert to infra node
+	   worker node convert to storage node 
+	
+  - master node - control plain 
+  - worker node - compute nodes 
+  - bootstrap node - This node used for to create "master" node, later we can discart this (Once OCP installation completed).
+  
+  workstation.lab.ocp4.example.com 
+  master01-03.ocp4.example.com
+  worker01-03.ocp4.example.com
+  sso.ocp4.example.com  [ RH Signle Sign on service ]  
+  git.ocp4.example.com  [ Version Control System]
+  idm.ocp4.example.com  [ LDAP server ]
+  
+
+- Login to VMs/Servers
+  [ student/student - sudo access]
+  [ root/ redhat ]
+  
+- Login to OCP cluster 
+  admin/redhatocp 
+  developer/developer 
+  kubeadmin/kubeadmin_paasword  [ ssh root@utility ; cd /home/lab/ocp4/auth ]
+  
+- Base Domain  - example.com (install-config.yaml)
+  Cluster Name - ocp4
+  DNS entries (domain): ocp4.example.com 
+  
+- CLuster Details:-
+  API URL = https://api.ocp4.example.com:6443 
+  Web COnsole = https://console-openshift-console.apps.example.com 
+  $ oc whoami --show-console 
+  $ oc get route -n openshift-console
+  
+  
+- OpenShift/kubernetes resources:-
+  POD 
+  Service (svc) 
+  Deploymnent 
+  DeploymentConfig 
+  Secret 
+  Configmap 
+  PV
+  pVC 
+  
+  
+# RHOCPv4.X 
+
+layer-07      Application deploy on kubernetes/openshift cluster using POD.
+layer-06     Other ad-on services [Service Mesh / RHACM/ RHACS / OpenShift AI/ 3Scale API mgmt]
+layer-05     OpenShift CLuster services [OTA,Internal registry, monitoring, route etc]
+layer-04     Kubernetes installation 
+layer-03     Container runtime and Packaging - [podman/docker/crio/containered/rocket etc]
+layer-02     Red Hat Enterprise CoreOS [Using installation method - openshift-installor ]
+layer-01     h/w|Hypervisor|Public/Private CLoud
+
+Hypervisor    - VMware, RHV, KVM, 
+Private Cloud - RHOSP [Red Hat openstack platform]
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.14
+
+Containerization:-
+ 1. Container   [ Handle via container engine like docker/podman/crio/rocket/containered ]
+ 2. Container Orchetration tool [ Kubernetes ]
+
+
+# Other Container Orchetration [ RKE/RKE2 - SUSE Rancher / Google Anthos etc ]
+layer-07      Application deploy on kubernetes/openshift cluster using POD.
+layer-06     Other ad-on services [itio ]
+layer-05     CLuster services
+layer-04     Kubernetes installation 1.23/1.25/1.27 + kustomization 5.0
+layer-03     Container runtime and Packaging - [podman/docker/crio/containered/rocket etc] - Engine 
+layer-02     Operating System  [ RHEL / Enterprise SUSE ]
+layer-01     h/w|Hypervisor|Public/Private CLoud
+ 
+
+Google Anthos 
+Google Kubernetes Engine 
+
+Red Hat OpenShift Container Platform
+Red Hat OpenShift kubernetes Engine
+
+Enterprise Suse - Rancher 
+Rancher Kubernetes Engine   
+  
+  
+
+
+  
