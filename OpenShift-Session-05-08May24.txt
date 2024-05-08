@@ -1,0 +1,76 @@
+####Session-03 [02-May-24]
+https://github.com/cprakash2118/OpenShift-April24
+
+####
+Quick Recap 
+
+
+
+
+# LOgin to OCP cluster via.
+1) kubeadmin 
+2) kubeconfig 
+3) Using LDAP's user [identity provider = LDAP - OpenLDAP, RHDS, Oracle DS]
+4) Using htpasswd [ Local login ]
+
+# Project or namespace 
+
+# RBAC - implementation
+
+# Applications deployment on Kubernetes/Openshift [ application deployed on pod,svc,dc,bc,secret.pv,pvc,image etc -> Namespace/project -> w.r.t Cluster ]
+
+# Access the application using http/https (And access non http application).
+
+# Setup the Quota on Project/namespace level.
+# setup the LimitRange [CPU,MEMORY or compute utilization ].
+###############################
+#As per our LAB.
+
+master01.ocp4.example.com [master/worker]
+
+API url = https://api.ocp4.example.com:6443 
+Openshift Web console = https://console-openshift-console.apps.ocp4.example.com
+  
+idm.ocp4.example.com  [ LDAP name ]
+Login to Web console - https://idm.ocp4.example.com  -> admin/redhatocp]
+
+git.ocp4.example.com  
+http://git.ocp4.example.com
+
+
+From workstation logint o "utility" machine.
+
+$ ssh utility -l root
+or
+$ ssh root@utility 
+# cd /home/lab/ocp4/auth 
+# ls 
+kubeadmin-password 
+kubeconfig
+
+$ cat kubeconfig | grep -i server 
+https://api.ocp4.example.com 
+
+$ cat /kubeadmin-passwd 
+kjasdhskajsk
+
+
+$ oc login -u admin -p redhat  https://api.ocp4.example.com 
+$ export KUBECONFIG=/home/student/kebeconfig 
+$ oc get nodes 
+
+# Users     groups          Binding        secretName         file-Name               idp  
+user1-5     sre_grp       user1-user5       sre_secret         sre_secret_file      sre_idp
+user6-10    devops_grp    user6-user10      devops_secret      devops_secret_file   devops_idp 
+user11-20   app_grp       user11-user20     app_secret         app_secret_file      app_idp   
+
+
+- "projectwork" 
+
+
+
+
+
+
+
+
