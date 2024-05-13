@@ -1,0 +1,44 @@
+
+Task-01:-
+devops team 
+user1-5  ; secret name= devops-secret ; identity provider = devops-team-htpasswd ; devops-file.txt 
+group name = devops_grp 
+
+
+Task-02:-
+middleware team 
+user6-10  ; secret name= middleware-secret ; identity provider = middleware-team-htpasswd ; middleware-file.txt 
+group name = middleware_grp
+
+Task-03:-
+Role Based Access Control (RBAC)
+devops_grp - "cluster-admin"
+user6-7 - "admin" access [ project/namespace = app-project ]
+user8-9 - "edit" access [ project/namespace = app-project ]
+user10  - "view" access [  project/namespace = app-project ]
+
+Task-04:-
+Setup Quota (Kind: ResourceQuota) w.r.t [  project/namespace = app-project ]
+oc create quota --help | less 
+Copy 1st example for reference.
+
+CPU=1250m (m - mini core)
+Memory=1250MiB
+pod=15
+service=5
+
+
+Task-05:-
+Limit setup ( refer RH document ] w.r.t [  project/namespace = app-project ]
+
+
+Task-06:-
+Deploy application.
+
+oc new-app --name application_name httpd:2.4 
+oc get pods
+oc get svc 
+oc get route  [ if no route ; oc expose service service-name ]
+oc get deployment
+
+
