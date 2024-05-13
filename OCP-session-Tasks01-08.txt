@@ -42,3 +42,26 @@ oc get route  [ if no route ; oc expose service service-name ]
 oc get deployment
 
 
+
+######################
+
+#Login to Workstation VM/Server 
+- On web browser - https://rol.redhat.com 
+- Click on "Lab Environment" then "Create/start" lab.
+- Once all servers/VMs showing "Active" state then click on "Open COnsole" only w.r.t workstation VM.
+- Logint o workstation VM using "student/student" 
+  FYI- root/redhat, and student having sudo access 
+
+- Open terminal then login to OCP cluster.
+$ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+$ oc whoami 
+admin 
+$ oc whoami --show-console 
+https://console-openshift-console.apps.ocp4.example.com 
+
+$ oc version 
+$ oc get clusterversion 
+$ oc project -q [Show current project/namespace]
+
+
+
