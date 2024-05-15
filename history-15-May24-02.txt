@@ -1,0 +1,230 @@
+    1  exit
+    2  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+    3  oc whoami --show-console
+    4  ldapsearch -D "cn=Directory Manager" -w redhatocp -H ldaps://rhds.ocp4.example.com
+    5  cat /home/student/DO380/labs/auth-ldap/rhds_ca.crt
+    6  history | grep lab 
+    7  lab start auth-ldap 
+    8  cat /home/student/DO380/labs/auth-ldap/rhds_ca.crt
+    9  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   10  history 
+   11  ldapsearch -D "cn=Directory Manager" -w redhatocp -H ldaps://rhds.ocp4.example.com
+   12  history 
+   13  cat /home/student/DO380/labs/auth-ldap/rhds_ca.crt
+   14  lab start auth-sync
+   15  history 
+   16  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   17  ldapsearch -D "cn=Directory Manager" -w redhatocp -H ldaps://rhds.ocp4.example.com
+   18  oc whoami --show-console
+   19  lab start auth-ldap
+   20  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   21  oc whoami --show-console
+   22  ldapsearch -D "cn=Directory Manager" -w redhatocp -H ldaps://rhds.ocp4.example.com
+   23  oc login -u kristendelgado -p redhat123 https://api.ocp4.example.com:6443
+   24  cd ~/DO380/labs/auth-sync/sync
+   25  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   26  oc new-project auth-rhds-sync
+   27  oc create sa rhds-group-syncer
+   28  oc create clusterrole rhds-group-syncer --erb get,list,create,update --resource groups
+   29  oc create clusterrole rhds-group-syncer --verb get,list,create,update --resource groups
+   30  oc adm policy add-cluster-role-to-user rhds-group-syncer -z rhds-group-syncer
+   31  oc create secret generic rhds-secret --from-literal bindPassword='redhatocp'
+   32  oc create configmap rhds-config --from-file rhds-sync.yaml=rhds-sync.yaml,ca.crt=rhds_ca.crt
+   33  oc create -f rhds-groups-cronjob.yaml
+   34  oc get groups
+   35  oc adm policy add-cluster-role-to-group 
+   36  oc adm policy add-cluster-role-to-group cluster-admin administrators
+   37  lab start auth-oidc
+   38  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   39  oc project auth-oidc
+   40  oc adm policy add-role-to-group edit contractors
+   41  oc adm policy add-role-to-group iew partners
+   42  ssh rhsso@sso.ocp4.example.com
+   43  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   44  cd 
+   45  history 
+   46  whoami 
+   47  oc whoami 
+   48  history 
+   49  lab start backup-export
+   50  oc login -u developer -p developer https://api.ocp4.example.com:6443
+   51  oc get all
+   52  oc get pvc, svc, route, deployment 
+   53  oc get pvc,svc,route,deployment
+   54  cd ~/DO380/labs/backup-export
+   55  mkdir production
+   56  oc get pvc etherpad -o yaml | yq d - metadata.annotations | yq d - metadata.creationTimestamp | yq d - metadata.namespace | yq d - metadata.finalizers | yq d - metadata.resourceVersion | yq d - metadata.uid | yq d - spec.volumeName | yq d - status > production/01-pvc.yml
+   57  oc get deploy etherpad -oyaml | yq d - metadata.annotations | yq d - metadata.creationTimestamp | yq d - metadata.namespace | yq d - metadata.resourceVersion | yq d - metadata.uid | yq d - metadata.generation | yq d - status > production/02-deployment.yml
+   58  oc get svc etherpad -oyaml | yq d - metadata.annotations | yq d - metadata.creationTimestamp | yq d - metadata.namespace | yq d - metadata.resourceVersion | yq d - metadata.uid | yq d - spec.clusterIP* | yq d - status > production/03-service.yml
+   59  oc get route etherpad -oyaml | yq d - metadata.annotations | yq d - metadata.creationTimestamp | yq d - metadata.namespace | yq d - metadata.resourceVersion | yq d - metadata.uid | yq d - spec.host | yq d - status > production/04-route.yml
+   60  tree production
+   61  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   62  oc patch configs.imageregistry.operator.openshift.io/cluster --patch '{"spec":{"defaultRoute":true}}' --type merge
+   63  watch -n10 oc get co openshift-apiserver
+   64  oc login -u developer -p developer https://api.ocp4.example.com:6443
+   65  oc registry login
+   66  IMAGE=$(oc get is etherpad --template '{{.status.publicDockerImageRepository}}')
+   67  echo $IMAGE
+   68  IMAGE=$(oc get is etherpad --template '{{.status.publicDockerImageRepository}}')
+   69  echo $IMAGE
+   70  oc image mirror $IMAGE file://etherpad --dir=production
+   71  oc get pvc
+   72  oc get storageclass ocs-external-storagecluster-ceph-rbd
+   73  oc get volumesnapshotclasses | egrep "^NAME|openshift-storage.rbd.csi.ceph.com"
+   74  oc scale deploy/etherpad --replicas 0
+   75  oc get pods
+   76  oc apply -f volumesnapshot.yml
+   77   cat ~/DO380/labs/backup-export/volumesnapshot.yml path
+   78   cat ~/DO380/labs/backup-export/volumesnapshot.yml
+   79  cd
+   80  pwd
+   81  oc whoami 
+   82  mkdir work 
+   83  cd work/
+   84  pwd
+   85  ll
+   86  oc get ouath/cluster -o yaml > oauth.yaml 
+   87  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+   88  oc get ouath/cluster -o yaml > oauth.yaml 
+   89  oc get oauth/cluster -o yaml > oauth.yaml 
+   90  ll
+   91  vim oauth.yaml 
+   92  touch devops-file.txt 
+   93  touch middleware-file.txt
+   94  for x in {1..5}; do htpasswd -B -b devops-file.txt user$x redhat; done
+   95  cat devops-file.txt 
+   96  for x in {6..10}; do htpasswd -B -b middleware-file.txt user$x redhat; done
+   97  ll
+   98  oc create secret generic devops-secret --from-file htpasswd=devops-file.txt -n openshift-config 
+   99  oc create secret generic middleware-secret --from-file htpasswd=middleware-file.txt -n openshift-config 
+  100  vim oauth.yaml 
+  101  oc apply -f oauth.yaml 
+  102  oc get pods 
+  103  oc get pods -n openshift-authentication
+  104  watch oc get pods -n openshift-authentication
+  105  ll
+  106  oc get pods -n openshift-authentication
+  107  vim oauth.yaml 
+  108  oc replace -f oauth.yaml 
+  109  oc get oauth/cluster -o yaml > oauth.yaml 
+  110  ll
+  111  for x in {1..10}; do oc login -u user$x -p redhat; done
+  112  oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+  113  oc get pods
+  114  oc get users
+  115  oc adm groups new devops_grp 
+  116  oc adm groups new middleware_grp 
+  117  oc get groups
+  118  oc get groups| grep _grp
+  119  oc adm groups  add-users devops_grp  user1 user2 user3 user4 user5 
+  120  oc get groups
+  121  oc adm groups  add-users middleware_grp  user6 user7 user8 user9 user10 
+  122  oc get groups
+  123  oc new-project project01 
+  124  oc project -q
+  125  oc whoami 
+  126  oc adm policy add-role-to-user admin user6 -n project01 
+  127  oc login user6 - redthat 
+  128  oc login -u user6 -p redthat 
+  129  oc login -u user6 -p redtat 
+  130  oc login -u user6 -p redhat 
+  131  oc whoami 
+  132  oc adm policy add-role-to-user admin user7 -n project01
+  133  oc adm policy add-role-to-user edit user8 -n project01
+  134  oc adm policy add-role-to-user edit user9 -n project01
+  135  oc adm policy add-role-to-user view user10 -n project01
+  136  oc login -u user10 -p redhat 
+  137  oc whoami 
+  138  oc get project
+  139  oc get all 
+  140  oc new-app --name gmail httpd:2.4 
+  141  oc whoami 
+  142  oc get all
+  143  oc new-app --name gmail httpd:2.4 
+  144  oc whoami 
+  145  oc logout 
+  146  oc login -u user9 -p redhat 
+  147  oc whoami 
+  148  oc project -q
+  149  oc get all
+  150  oc new-app --name gmail httpd:2.4 
+  151  oc get pdos
+  152  oc get pods
+  153  oc get pods -o yaml 
+  154  oc get pods
+  155  oc get svc 
+  156  oc get deployment 
+  157  oc get route
+  158  oc get replicaset 
+  159  oc get po
+  160  oc get deployment
+  161  oc get deployment -o yaml > deployment-gmail.yaml 
+  162  vim deployment-gmail.yaml 
+  163  oc get po
+  164  oc apply -f deployment-gmail.yaml 
+  165  oc get po
+  166  vim deployment-gmail.yaml 
+  167  oc apply -f deployment-gmail.yaml 
+  168  oc get deployment -o yaml > deployment-gmail.yaml 
+  169  vim deployment-gmail.yaml 
+  170  oc apply -f deployment-gmail.yaml 
+  171  oc get po
+  172  oc delete pod gmail-58fd456b8f-qm6sh 
+  173  oc get po
+  174  oc delete pod gmail-58fd456b8f-6wqsl 
+  175  oc get pods
+  176  oc delete pod gmail-58fd456b8f-6wqsl 
+  177  oc get pods
+  178  oc delete deployment gmail 
+  179  oc get pods
+  180  oc get svc 
+  181  oc delete svc gmail 
+  182  oc get svc 
+  183  oc get all
+  184  history > history-15-May24.txt
+  185  git clone https://github.com/cprakash2118/OpenShift-April24
+  186  cp -rp history-15-May24.txt OpenShift-April24/
+  187  cd OpenShift-April24/
+  188  git status 
+  189  git add history-15-May24.txt 
+  190  git commit -m update 
+  191  git push 
+  192  cd ..
+  193  l
+  194  ll
+  195  vim deployment-gmail.yaml 
+  196  oc get deployment 
+  197  oc get all 
+  198  oc create quota --help |less
+  199  #oc create quota my-quota --hard=cpu=1,memory=1G,pods=2,services=3,replicationcontrollers=2,resourcequotas=1,secrets=5,persistentvolumeclaims=10
+  200  oc create quota myquota --hard=cpu=1250m,memory=1250Mi,pods=6,services=3,secrets=20 -n project01 
+  201  oc whoami 
+  202  oc login -u user6 -p redhat 
+  203  oc create quota myquota --hard=cpu=1250m,memory=1250Mi,pods=6,services=3,secrets=20 -n project01 
+  204  oc whoami 
+  205  oc login -u user1 -p redhat 
+  206  oc get nodes
+  207  oc login -u admin -p redhat 
+  208  oc login -u admin -p redhatocp
+  209  oc get users 
+  210  oc get users | grep devops 
+  211  oc get users | grep middleware
+  212  oc get groups
+  213  oc adm policy add-cluster-role-to-group cluster-admin devops_grp
+  214  oc login -u user1 -p redhat 
+  215  oc get nodes
+  216  oc create quota myquota --hard=cpu=1250m,memory=1250Mi,pods=6,services=3,secrets=20 -n project01 
+  217  oc describe resourcequotas 
+  218  oc describe resourcequotas -n project01
+  219  oc get secret 
+  220  oc get sa
+  221  oc whoami 
+  222  oc get group
+  223  oc describe clusterrolebindings |less
+  224  oc project -q
+  225  oc describe rolebindings |less
+  226  oc project -q
+  227  oc project project01 
+  228  oc project -q
+  229  oc describe rolebindings |less
+  230  history > OpenShift-April24/history-15-May24-02.txt 
