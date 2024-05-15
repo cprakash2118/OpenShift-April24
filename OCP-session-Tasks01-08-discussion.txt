@@ -1,0 +1,134 @@
+
+Task-01:-
+devops team 
+user1-5  ; secret name= devops-secret ; identity provider = devops-team-htpasswd ; devops-file.txt 
+group name = devops_grp 
+
+
+Task-02:-
+middleware team 
+user6-10  ; secret name= middleware-secret ; identity provider = middleware-team-htpasswd ; middleware-file.txt 
+group name = middleware_grp
+
+Task-03:-
+Role Based Access Control (RBAC)
+devops_grp - "cluster-admin"
+user6-7 - "admin" access [ project/namespace = app-project ]
+user8-9 - "edit" access [ project/namespace = app-project ]
+user10  - "view" access [  project/namespace = app-project ]
+
+Task-04:-
+Setup Quota (Kind: ResourceQuota) w.r.t [  project/namespace = app-project/project01 ]
+oc create quota --help | less 
+Copy 1st example for reference.
+
+CPU=1250m (m - mini core)
+Memory=1250MiB
+pod=15
+service=5
+
+
+Task-05:-
+Limit setup ( refer RH document ] w.r.t [  project/namespace = app-project ]
+
+
+Task-06:-
+Deploy application.
+
+oc new-app --name application_name httpd:2.4 
+oc get pods
+oc get svc 
+oc get route  [ if no route ; oc expose service service-name ]
+oc get deployment
+
+#######################
+
+$ oc new-app --name application-name image:tag
+### OpenShift/Kubernetes resources.
+- Deployment
+- pod 
+- service (svc)
+
+
+$ oc new-app --name application-name --as-deployment-config image:tag~/git/URL 
+
+- buildconfig  (bc)
+- DeploymentConfig (dc)
+- pod   (pod)
+- service (svc)
+
+
+
+######################
+Phase-01:-
+
+#Login to Workstation VM/Server 
+- On web browser - https://rol.redhat.com 
+- Click on "Lab Environment" then "Create/start" lab.
+- Once all servers/VMs showing "Active" state then click on "Open COnsole" only w.r.t workstation VM.
+- Logint o workstation VM using "student/student" 
+  FYI- root/redhat, and student having sudo access 
+
+- Open terminal then login to OCP cluster.
+$ oc login -u admin -p redhatocp https://api.ocp4.example.com:6443
+$ oc whoami 
+admin 
+$ oc whoami --show-console 
+https://console-openshift-console.apps.ocp4.example.com 
+
+$ oc version 
+$ oc get clusterversion 
+$ oc project -q [Show current project/namespace]
+
+
+
+Task-01:-
+devops team 
+user1-5  ; secret name= devops-secret ; identity provider = devops-team-htpasswd ; devops-file.txt 
+group name = devops_grp 
+
+Solution-01#
+
+Step-1#
+$ htpasswd -c -B -b devops-file.txt user1 redhat123 
+$ htpasswd -B -b devops-file.txt user2 redhat123 
+$ htpasswd -B -b devops-file.txt user3 redhat123 
+$ htpasswd -B -b devops-file.txt user4 redhat123 
+$ htpasswd -B -b devops-file.txt user5 redhat123
+
+$ cat devops-file.txt
+user1:aljdkals
+user2:kasjdhkjsa
+user3:kjsahdjka
+
+
+Step-2# 
+$ oc create secret generic devops-secret --from-file htpasswd=devops-file.txt -n openshift-config 
+$ oc get secret -n openshift-config | grep devops-secret
+
+Step-03# 
+Update Oauth service.
+
+$ oc get oauth/cluster -o yaml > oauth.yaml 
+$ vim oauth.yaml 
+Appending--
+
+https://access.redhat.com/documentation/en-us/openshift_container_platform/4.13/html/authentication_and_authorization/configuring-identity-providers#identity-provider-htpasswd-CR_configuring-htpasswd-identity-provider
+
+$ oc replace -f oauth.yaml 
+
+$ oc gert pods -n openshift-authentication 
+
+$ for x in {1..5}
+do
+oc login -u user$x -p redhat123 https://api.ocp4.example.com:6443
+done 
+
+Again login as "cluster-admin"
+
+$ oc get user
+
+
+
+
+ 
