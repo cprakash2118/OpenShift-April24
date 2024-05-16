@@ -1,0 +1,104 @@
+
+# Application/Database deployment w.r.t Production Kubernetes (OpenShift).
+
+- Container [Engine - podman/docker/rocket/crio/containerd ]
+- Container Orchestration [Tool - Kubernetes]
+
+# Red Hat OpenShift cluster (OCP)
+- Master/worker nodes.
+- Login to OCP cluster using "oc/Web Console" - cluster-admin user (similar to sudo user).
+- Project/namespace - setup Quota (ResourceQuota) & Limit Range (LimitRange) with RBAC.
+- RBAC - edit/view/admin/cluster-admin
+- Deploy application to "Production Kubernetes Env"
+- To deploy application/Database we required kubernetes/OpenShift resources.
+- What are kubernetes/OpenShift resources.
+  1) POD [One or more containers running on POD]
+     FYI= Application required runtime env, libs, bins and Source Code that will be provided by images and SCM (Like git ; mesh).
+	 
+  2) Service (svc).
+     - Provide IP address to each PO 
+	 - It act as a load balancer (RR).
+
+  3) Route - Which expose application running on OCP cluster 
+           http://
+		   https:// [ Edge;Passthrough;Re-encryption ]
+
+  4) secret 
+  5) configMap 
+  6) Deployment 
+  7) deployment 
+  8) buildConfig 
+  9) PV
+  10) pvc 
+  etc 
+  
+########## Example:-
+
+Step-1# Created namespace [ namespace = demo01 ]
+
+$ oc new-project demo01 
+$ oc project -q 
+$ oc get all 
+
+
+
+Step-2# Deploy application/Database using image [quay.io/cprakash2118/rhel8-mysql-80]
+
+$ oc new-app --name mysql --image quay.io/cprakash2118/rhel8-mysql-80
+$ oc get pods 
+$ oc get service 
+$ oc get deployment 
+$ oc get replicaset [Default with deployment as per Kubernetes]
+
+****
+### W.r.t deploymentconfig or dc
+$ oc new-app --name mysql --as-deployment-config --image quay.io/cprakash2118/rhel8-mysql-80
+$ oc get pods 
+$ oc get service 
+$ oc get deploymentconfig 
+or
+$ oc get dc 
+
+$ oc get replicationcontroller
+****
+
+Note: Database not working; showing error.
+
+$ oc get pods 
+$ oc logs pod-name 
+
+
+
+Step-3# Create secret (generic) to provide required environment variables.
+oc create secret generic mysql --from-literal user=myuser --from-literal password=redhat123 --from-literal database=test_secrets --from-literal hostname=mysql
+
+Step-4# Update secret 
+$ oc set env deployment/mysql --from secret/mysql  --prefix MYSQL_
+
+Step-5# Deploy FE application using below images.
+$ oc new-app --name quotes quay.io/cprakash2118/famous-quotes
+$ oc get pods 
+$ oc set env deployment/quotes --from secret/mysql  --prefix QUOTES_
+
+$ oc get pods 
+$ oc get svc 
+$ oc get route 
+$ oc expos	service <service-name>
+
+$ oc get route 
+
+$ curl route-name.
+
+
+mysql -u myuser --password=redhat123 test_secrets -e 'show databases;'
+
+$ CREATE TABLE Projects (id int NOT NULL,
+-> name varchar(255) DEFAULT NULL,
+-> code varchar(255) DEFAULT NULL,
+-> PRIMARY KEY (id));
+
+
+
+$  CREATE TABLE Projects (id int NOT NULL, name varchar(255) DEFAULT NULL, code varchar(255) DEFAULT NULL, PRIMARY KEY (id));
+
+insert into Projects (id, name, code) values (1,'DevOps','DO280');
